@@ -36,6 +36,15 @@ func main() {
 
 	CheckError(err)
 	fmt.Printf("rows updated: %v\n", count)
+
+	// delete row/rows in a table
+	del_sql_statement := `DELETE FROM students WHERE std_id=$1;`
+	res, err = db.Exec(del_sql_statement, 17)
+	CheckError(err)
+	count, err = res.RowsAffected()
+
+	CheckError(err)
+	fmt.Printf("rows deleted: %v\n", count)
 }
 
 func CheckError(err error) {
