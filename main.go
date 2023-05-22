@@ -8,6 +8,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type student_schema struct {
+	id       int
+	name     string
+	program  string
+	language string
+}
+
 func main() {
 	// establishing connection to the database
 	fmt.Println("Connecting to db.... ")
@@ -63,6 +70,30 @@ func main() {
 
 		fmt.Println(id, name, program, language)
 	}
+
+	// retrieving records
+	rtv_sql_statement := `SELECT * FROM students`
+	rows, err = db.Query(rtv_sql_statement)
+	CheckError(err)
+	defer rows.Close()
+
+	// creates placeholder of the student
+	snbs := make([]student_schema, 0)
+
+	// storing the rows into structures
+	for rows.Next() { // prepares the next result row for reading with the Scan method
+		snb := student_schema{}
+		err = rows.Scan(&snb.id, &snb.name, &snb.program, &snb.language) // copies the columns in the current row into the values pointed at by variables
+		CheckError(err)
+		snbs = append(snbs, snb)
+	}
+
+	// looping and printing the values of the records
+	for _, snb := range snbs {
+		fmt.Println(snb.id, snb.name, snb.program, snb.language)
+	}
+
+	// fmt.Println(snbs)
 }
 
 func CheckError(err error) {
