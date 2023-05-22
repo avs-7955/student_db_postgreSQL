@@ -45,6 +45,24 @@ func main() {
 
 	CheckError(err)
 	fmt.Printf("rows deleted: %v\n", count)
+
+	// quering rows using conditions
+	query_sql := `SELECT * FROM students WHERE std_id=3`
+	rows, err := db.Query(query_sql)
+	CheckError(err)
+
+	defer rows.Close()
+	for rows.Next() { //prepares the next result row for reading with the Scan method
+		var id int
+		var name string
+		var program string
+		var language string
+
+		err = rows.Scan(&id, &name, &program, &language) // copies the columns in the current row into the values pointed at by variables
+		CheckError(err)
+
+		fmt.Println(id, name, program, language)
+	}
 }
 
 func CheckError(err error) {
