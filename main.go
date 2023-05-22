@@ -21,6 +21,21 @@ func main() {
 	}
 
 	fmt.Println("\nSuccessfully connected to the database!")
+
+	// inserting row into database
+	ins_sql_statement := `INSERT INTO students VALUES ($1, $2, $3,$4)`
+	_, err = db.Exec(ins_sql_statement, 23, "Rabbit", "B.Tech", "English")
+	CheckError(err)
+	fmt.Println("\nRow inserted successfully!")
+
+	// updating row in database
+	upd_sql_statement := `UPDATE students SET std_lang=$1 WHERE std_id=$2;`
+	res, err := db.Exec(upd_sql_statement, "Hindi", 15)
+	CheckError(err)
+	count, err := res.RowsAffected()
+
+	CheckError(err)
+	fmt.Printf("rows updated: %v\n", count)
 }
 
 func CheckError(err error) {
